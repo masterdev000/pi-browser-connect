@@ -1,163 +1,453 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#24113d" />
-  <title>Pi Browser Connect</title>
 
-  <!-- Required by Pi. Pi Browser does NOT inject window.Pi automatically. -->
-  <script src="https://sdk.minepi.com/pi-sdk.js"></script>
+    <meta charset="UTF-8">
 
-  <style>
-    :root {
-      color-scheme: dark;
-      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-    * { box-sizing: border-box; }
+    <title>Pi Browser XDR Test</title>
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      background:
-        radial-gradient(circle at top, #5c2b86 0, transparent 40%),
-        linear-gradient(180deg, #211034 0%, #100918 100%);
-      color: #fff;
-    }
 
-    .card {
-      width: min(100%, 460px);
-      padding: 26px;
-      border: 1px solid rgba(255,255,255,.14);
-      border-radius: 24px;
-      background: rgba(22, 12, 34, .86);
-      box-shadow: 0 24px 80px rgba(0,0,0,.34);
-      backdrop-filter: blur(12px);
-    }
+    <!-- Pi SDK -->
+    <script src="https://sdk.minepi.com/pi-sdk.js"></script>
 
-    .logo {
-      width: 58px;
-      height: 58px;
-      display: grid;
-      place-items: center;
-      border-radius: 18px;
-      font-size: 34px;
-      font-weight: 800;
-      background: #f4b942;
-      color: #3d2361;
-      margin-bottom: 18px;
-    }
 
-    h1 {
-      margin: 0 0 8px;
-      font-size: 28px;
-    }
+    <style>
 
-    .sub {
-      margin: 0 0 22px;
-      color: #cfc4da;
-      line-height: 1.5;
-    }
+        * {
+            box-sizing: border-box;
+        }
 
-    button {
-      width: 100%;
-      min-height: 52px;
-      border: 0;
-      border-radius: 15px;
-      font-size: 16px;
-      font-weight: 750;
-      background: #f4b942;
-      color: #2c183f;
-      cursor: pointer;
-    }
+        body {
+            margin: 0;
+            padding: 30px 16px;
 
-    button:disabled {
-      opacity: .55;
-      cursor: not-allowed;
-    }
+            background: #0d0d12;
+            color: #ffffff;
 
-    #status {
-      margin-top: 16px;
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: rgba(255,255,255,.07);
-      color: #ddd4e6;
-      line-height: 1.4;
-      word-break: break-word;
-    }
+            font-family:
+                Inter,
+                Arial,
+                sans-serif;
+        }
 
-    .account {
-      display: none;
-      margin-top: 18px;
-      gap: 10px;
-    }
+        .container {
+            width: 100%;
+            max-width: 850px;
 
-    .row {
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: rgba(255,255,255,.06);
-    }
+            margin: auto;
+        }
 
-    .label {
-      display: block;
-      margin-bottom: 5px;
-      color: #a99bb7;
-      font-size: 12px;
-      text-transform: uppercase;
-      letter-spacing: .08em;
-    }
+        h1 {
+            margin-bottom: 8px;
+        }
 
-    .value {
-      font-size: 14px;
-      overflow-wrap: anywhere;
-    }
+        .subtitle {
+            color: #999;
+            margin-bottom: 30px;
+        }
 
-    .note {
-      margin-top: 18px;
-      color: #9f91ae;
-      font-size: 13px;
-      line-height: 1.45;
-    }
-  </style>
+        .card {
+            background: #17171f;
+
+            border: 1px solid #292934;
+
+            border-radius: 14px;
+
+            padding: 22px;
+
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 18px;
+        }
+
+        button {
+            border: 0;
+
+            padding: 12px 18px;
+
+            border-radius: 9px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            background: #6c4cff;
+            color: white;
+
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        button.secondary {
+            background: #30303c;
+        }
+
+        button:disabled {
+            opacity: .4;
+            cursor: not-allowed;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+
+            margin-top: 8px;
+            margin-bottom: 12px;
+
+            padding: 12px;
+
+            background: #0e0e14;
+
+            color: white;
+
+            border:
+                1px solid #343441;
+
+            border-radius: 8px;
+
+            font-family: monospace;
+
+            font-size: 13px;
+        }
+
+        textarea {
+            min-height: 160px;
+            resize: vertical;
+        }
+
+        .value {
+            word-break: break-all;
+            font-family: monospace;
+        }
+
+        .label {
+            color: #8d8d98;
+            font-size: 12px;
+            margin-top: 14px;
+        }
+
+        .status {
+            margin-top: 12px;
+
+            padding: 12px;
+
+            background: #101016;
+
+            border-radius: 8px;
+
+            white-space: pre-wrap;
+            word-break: break-word;
+
+            font-family: monospace;
+            font-size: 12px;
+        }
+
+        .success {
+            border-left:
+                3px solid #35d07f;
+        }
+
+        .error {
+            border-left:
+                3px solid #ff5252;
+        }
+
+        .warning {
+            border-left:
+                3px solid #ffc857;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .verified {
+            font-size: 20px;
+            color: #35d07f;
+            font-weight: bold;
+        }
+
+    </style>
+
 </head>
+
+
 <body>
-  <main class="card">
-    <div class="logo">π</div>
-    <h1>Connect your Pi wallet</h1>
-    <p class="sub">
-      Authentication is handled by Pi Browser. This page never asks for your wallet passphrase.
-    </p>
 
-    <button id="connectBtn">Connect with Pi Browser</button>
+<div class="container">
 
-    <div id="status">Not connected.</div>
+    <h1>Pi Browser XDR Test</h1>
 
-    <section id="account" class="account">
-      <div class="row">
-        <span class="label">Pi username</span>
-        <span id="username" class="value"></span>
-      </div>
+    <div class="subtitle">
+        Authenticate → identify Testnet wallet → build XDR → sign → verify signature
+    </div>
 
-      <div class="row">
-        <span class="label">Verified UID</span>
-        <span id="uid" class="value"></span>
-      </div>
 
-      <div class="row">
-        <span class="label">Wallet address</span>
-        <span id="walletAddress" class="value"></span>
-      </div>
-    </section>
+    <!-- Authentication -->
 
-    <p class="note">
-      For testing, this project starts in Pi Sandbox/Testnet mode. We can switch it to Mainnet later.
-    </p>
-  </main>
+    <div class="card">
 
-  <script src="/app.js"></script>
+        <h2>1. Pi Authentication</h2>
+
+        <button id="connectButton">
+            Connect with Pi
+        </button>
+
+        <div
+            id="authStatus"
+            class="status"
+        >
+            Not connected
+        </div>
+
+        <div
+            id="userInfo"
+            class="hidden"
+        >
+
+            <div class="label">
+                Username
+            </div>
+
+            <div
+                id="username"
+                class="value"
+            ></div>
+
+
+            <div class="label">
+                Verified UID
+            </div>
+
+            <div
+                id="uid"
+                class="value"
+            ></div>
+
+
+            <div class="label">
+                wallet_address returned by Pi
+            </div>
+
+            <div
+                id="authWallet"
+                class="value"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Wallet -->
+
+    <div class="card">
+
+        <h2>2. Testnet Wallet</h2>
+
+        <button
+            id="discoverWalletButton"
+            disabled
+        >
+            Try Pi Wallet Discovery
+        </button>
+
+
+        <div class="label">
+            Pi Wallet SDK methods detected
+        </div>
+
+        <div
+            id="walletMethods"
+            class="status"
+        >
+            Authenticate first
+        </div>
+
+
+        <div class="label">
+            Testnet wallet address
+        </div>
+
+        <input
+            id="walletAddress"
+            type="text"
+            placeholder="G..."
+            autocomplete="off"
+            spellcheck="false"
+        >
+
+
+        <button
+            id="checkWalletButton"
+            class="secondary"
+        >
+            Check on Testnet
+        </button>
+
+
+        <div
+            id="walletStatus"
+            class="status"
+        >
+            Enter your Testnet G... address if Pi does not return it automatically.
+        </div>
+
+    </div>
+
+
+    <!-- XDR -->
+
+    <div class="card">
+
+        <h2>3. Build Test XDR</h2>
+
+        <p>
+            This builds a 0.0000001 Test-Pi payment
+            from your wallet back to itself.
+        </p>
+
+        <p>
+            The application does not submit it.
+        </p>
+
+
+        <button
+            id="buildButton"
+            disabled
+        >
+            Build Unsigned XDR
+        </button>
+
+
+        <div class="label">
+            Unsigned XDR
+        </div>
+
+        <textarea
+            id="unsignedXdr"
+            placeholder="Unsigned XDR will appear here..."
+            spellcheck="false"
+        ></textarea>
+
+    </div>
+
+
+    <!-- Signing -->
+
+    <div class="card">
+
+        <h2>4. Sign with Pi Wallet</h2>
+
+
+        <button
+            id="signButton"
+            disabled
+        >
+            Sign XDR
+        </button>
+
+
+        <div
+            id="signingStatus"
+            class="status"
+        >
+            Waiting for XDR
+        </div>
+
+
+        <div class="label">
+            Raw Pi.Wallet response
+        </div>
+
+        <textarea
+            id="rawSignResult"
+            readonly
+        ></textarea>
+
+
+        <div class="label">
+            Signed XDR
+        </div>
+
+        <textarea
+            id="signedXdr"
+            readonly
+        ></textarea>
+
+    </div>
+
+
+    <!-- Verification -->
+
+    <div class="card">
+
+        <h2>5. Verify Wallet Ownership</h2>
+
+
+        <button
+            id="verifySignatureButton"
+            disabled
+        >
+            Verify Signature
+        </button>
+
+
+        <div
+            id="verificationStatus"
+            class="status"
+        >
+            Sign an XDR first.
+        </div>
+
+
+        <div
+            id="verifiedBox"
+            class="hidden"
+        >
+
+            <p class="verified">
+                ✓ Wallet ownership verified
+            </p>
+
+            <div class="label">
+                Pi UID
+            </div>
+
+            <div
+                id="verifiedUid"
+                class="value"
+            ></div>
+
+
+            <div class="label">
+                Wallet
+            </div>
+
+            <div
+                id="verifiedWallet"
+                class="value"
+            ></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="/app.js"></script>
+
 </body>
+
 </html>
